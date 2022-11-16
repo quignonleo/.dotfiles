@@ -1,0 +1,36 @@
+{
+    // UI
+    "workbench.colorTheme": "Gruvbox Dark Hard",
+    "terminal.integrated.inheritEnv": false,
+    "git.confirmSync": false,
+    // Iterm -> mac integration 
+    "terminal.external.osxExec": "iterm2.app",
+    "terminal.integrated.allowChords": false,
+    "terminal.integrated.copyOnSelection": true,
+    "git.autofetch": true,
+    "editor.formatOnSave": true,
+    "jupyter.askForKernelRestart": false,
+    "workbench.editorAssociations": {
+        "*.ipynb": "jupyter-notebook"
+    },
+    "editor.multiCursorModifier": "ctrlCmd",
+    "notebook.cellToolbarLocation": {
+        "default": "right",
+        "jupyter-notebook": "left"
+    },
+    "workbench.startupEditor": "none",
+    "security.workspace.trust.untrustedFiles": "open",
+    // Linting and else
+    "python.analysis.autoImportCompletions": false,
+    "python.terminal.activateEnvironment": true,
+    "python.linting.flake8Enabled": true,
+    "python.linting.mypyEnabled": false,
+    "python.terminal.activateEnvInCurrentTerminal": true,
+    "python.analysis.typeCheckingMode": "off",
+    "python.formatting.provider": "black",
+    "workbench.sideBar.location": "right",
+    "explorer.confirmDelete": false,
+    "[python]": {
+        "editor.defaultFormatter": "ms-python.black-formatter"
+    }
+}

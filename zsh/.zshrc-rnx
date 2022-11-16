@@ -1,0 +1,188 @@
+# _______ Env variables _______
+
+export HISTFILE=~/.zsh_history
+export HISTSIZE=100000
+export SAVEHIST=100000
+
+export LC_ALL=en_US.UTF-8
+export LANG=en_US.UTF-8
+
+export CASE_SENSITIVE=true  # prefer case sensitive complete
+
+export HOMEBREW_NO_AUTO_UPDATE=1  # Disable homebrew auto update on install
+
+export PYTHONSTARTUP=/Users/leoquignon/.config/python_startup.py
+
+export DAGSTER_HOME=${HOME}/src/venturi
+# _______ ZSH setup _______
+
+# command history
+setopt appendhistory
+setopt inc_append_history
+setopt share_history
+
+# autocompletion behavior
+
+# Ignore these everywhere except for rm
+zstyle ':completion:*:*:*' ignored-patterns '(|*/)__pycache__'     '(|*/)*.egg-info' '(*/)#lost+found'
+zstyle ':completion:*:rm:*' ignored-patterns '(|*/)*.egg-info'
+
+# Set accept-exact-dirs for cases of mounted drives (Google Drive or S3-bucket)
+# to avoid slow down searching on parent directory
+# https://github.com/ohmyzsh/ohmyzsh/issues/7348
+zstyle ':completion:*' accept-exact-dirs true
+
+# matches case insensitive for lowercase
+zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
+
+# rehash if command not found (possibly recently installed)
+zstyle ':completion:*' rehash true
+
+
+# bind keys
+_CUSTOM_WORDCHARS='*?_[]~=&;!#$%^(){}<>'
+
+# backward and forward word with option+left/right
+tcsh-backward-word () {
+  local WORDCHARS=_CUSTOM_WORDCHARS
+  zle backward-word
+}
+zle -N tcsh-backward-word
+bindkey '^[b' tcsh-backward-word
+tcsh-forward-word () {
+  local WORDCHARS=_CUSTOM_WORDCHARS
+  zle forward-word
+}
+zle -N tcsh-forward-word
+bindkey '^[f' tcsh-forward-word
+
+# backward and forward word with ctrl+left/right
+bindkey '^[[1;5D' backward-word
+bindkey '^[[1;5C' forward-word
+
+# https://superuser.com/questions/1421423/how-to-bind-option-delete-to-backward-delete-word-in-zsh-vi-mode-in-tmux-and-ala
+# Ensure having same behaviour in tmux
+bindkey '^W' backward-kill-word
+
+# Delete word with option+backspace with more word delimiters
+# https://www.zsh.org/mla/users/2001/msg00870.html
+tcsh-backward-delete-word () {
+  local WORDCHARS=_CUSTOM_WORDCHARS
+  zle backward-delete-word
+}
+zle -N tcsh-backward-delete-word
+bindkey '^[^H' tcsh-backward-delete-word
+
+# delete char
+bindkey "^[[3~" delete-char
+
+# beginning / end of line
+bindkey '^A' beginning-of-line
+bindkey '^E' end-of-line
+
+# edit command line in 
+bindkey '^X' edit-command-line
+
+# Hist search
+bindkey '^r' history-incremental-search-backward
+bindkey '^R' history-incremental-pattern-search-backward
+
+# Hist search completion of line with arrows up and down using ohmyzsh history-substring-search
+zle -N history-substring-search-up
+zle -N history-substring-search-down
+bindkey "^[[A" history-substring-search-up
+bindkey "^[[B" history-substring-search-down
+
+# Bind ctrl + space
+bindkey '^ ' autosuggest-accept
+
+# _______ Aliases _______
+
+# git
+alias gl='git pull'
+alias gp='git push'
+alias gd='git diff'
+alias gc='git commit --verbose'
+alias gco='git checkout'
+alias gb='git branch'
+alias gs='git status'
+alias ga='git add'
+alias glog='git log --oneline --graph --decorate --all'
+
+function fuzzy_gco() {
+  branch=* master
+  pattern_to_exclude="remotes/origin/"
+  local_branch=
+  git checkout 
+}
+alias gcos=fuzzy_gco
+
+# Conda
+alias act='conda activate'
+alias deact='conda deactivate'
+
+# ls
+alias ll="ls -al"
+
+# Business
+function dst() {
+  YELLOW='\033[0;33m'
+  BLUE='\033[0;34m'
+  NC='\033[0m' # No Color
+
+  echo -e "year -->  winter-summer  -  summer-winter "
+  echo -e "       (+01:00 -> +02:00) (+02:00 -> +01:00)"
+  echo -e "--------------------------------------------"
+  echo -e "2015 -->     29/03       -       25/10 "
+  echo -e "2016 -->     27/03       -       30/10 "
+  echo -e "2017 -->     26/03       -       29/10 "
+  echo -e "2018 -->     25/03       -       28/10 "
+  echo -e "2019 -->     31/03       -       27/10 "
+  echo -e "                        ---"
+  echo -e "2020 -->     29/03       -       25/10 "
+  echo -e "2021 -->     28/03       -       31/10 "
+  echo -e "2022 -->     27/03       -       30/10 "
+}
+
+# _______ OhMyZsh _______
+
+_zsh_custom_plugin_path=/Users/leoquignon/.oh-my-zsh/custom/plugins
+
+_zsh_autosuggestion_path=/Users/leoquignon/.oh-my-zsh/custom/plugins/zsh-autosuggestions
+if [ ! -d /Users/leoquignon/.oh-my-zsh/custom/plugins/zsh-autosuggestions ]; then
+  git clone https://github.com/zsh-users/zsh-autosuggestions /Users/leoquignon/.oh-my-zsh/custom/plugins/zsh-autosuggestions
+fi
+
+_zsh_syntax_highlighting_path=/Users/leoquignon/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
+if [ ! -d /Users/leoquignon/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting ]; then
+  git clone https://github.com/zsh-users/zsh-syntax-highlighting.git /Users/leoquignon/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
+fi
+
+# If you want more: https://safjan.com/top-popular-zsh-plugins-on-github/
+plugins=(
+  git
+  nvm
+  zsh-autosuggestions
+  zsh-syntax-highlighting
+  macos
+)
+
+# https://zshthem.es/all/
+export ZSH_THEME=cloud
+
+autoload -Uz compinit && compinit  # after plugins definition
+
+
+# _______ Anything else _______
+
+## >>> conda initialize >>>
+if [ -f "/Users/leoquignon/opt/miniconda3/etc/profile.d/conda.sh" ]; then
+  . "/Users/leoquignon/opt/miniconda3/etc/profile.d/conda.sh"
+fi
+export PATH="/Users/leoquignon/opt/miniconda3/bin:$PATH"
+
+# "code" command to open visual studio code
+export PATH="/Applications/Visual Studio Code.app/Contents/Resources/app/bin:$PATH"
+
+# Fzf conf
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
