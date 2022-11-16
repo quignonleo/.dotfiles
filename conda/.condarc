@@ -1,0 +1,8 @@
+create_default_packages:
+  - ipython
+  - ptpython
+  - pdbpp
+  - python-devtools
+channels:
+  - conda-forge
+  - defaults
